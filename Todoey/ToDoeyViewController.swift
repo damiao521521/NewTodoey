@@ -10,7 +10,7 @@ import UIKit
 
 class ToDoeyViewController: UITableViewController {
 
-    let itemArray = ["A", "B", "C"]
+    var itemArray = ["A", "B", "C"]
     var theChecked : Bool = false
     
     
@@ -36,6 +36,7 @@ class ToDoeyViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
         cell.textLabel?.text = itemArray[indexPath.row]
+        cell.backgroundColor = UIColor.blue
      //  tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark  // 很显然这个函数应该是tableview都已经形成后才能使用的。是在delegate使用的函数
         // 在datasource里 是正在建立这个cell 所以肯定要用dequeResuableCell 这个函数先建立cell
 
@@ -67,6 +68,45 @@ class ToDoeyViewController: UITableViewController {
       
     }
 
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+//        var mjInput : String = "thisisold value" {
+//            willSet {
+//                print("here is the newvalue : \(newValue) \n")
+//            }
+//            didSet {
+//                print("here is the oldValue:  \(oldValue) \n")
+//            }
+//        }
+        
+        var mjInput : UITextField?
+        
+        let mjAlert = UIAlertController(title: "Title :PLS add new Item Sir", message: "get some new item message ", preferredStyle: .alert)
+        
+        mjAlert.addAction(UIAlertAction(title: "very good", style: .default, handler: { (yourAction) in
+            
+            if let tempInput = mjInput {
+                self.itemArray.append(tempInput.text!)
+                self.tableView.reloadData()
+            }
+            
+
+            
+        }))
+        mjAlert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        mjAlert.addTextField { (yourInput) in
+            
+                 mjInput =  yourInput
+      
+           
+        }
+        
+        
+        present(mjAlert, animated: true, completion: nil)
+        
+    }
+    
 
     
 
