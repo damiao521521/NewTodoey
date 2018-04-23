@@ -13,11 +13,23 @@ class ToDoeyViewController: UITableViewController {
     var itemArray = ["A", "B", "C"]
     var theChecked : Bool = false
     
+    let mjDefaults = UserDefaults.standard
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if let tempArray =  mjDefaults.array(forKey: "mjToDoList") as? [String] {
+              itemArray = tempArray
+        }
+      
+        
+       mjDefaults.set("good morning", forKey: "mjToDoList")
+        
+        
+      
     }
 
 
@@ -80,26 +92,32 @@ class ToDoeyViewController: UITableViewController {
 //            }
 //        }
         
-        var mjInput : UITextField?
+   //     var mjInput : UITextField?
         
         let mjAlert = UIAlertController(title: "Title :PLS add new Item Sir", message: "get some new item message ", preferredStyle: .alert)
         
         mjAlert.addAction(UIAlertAction(title: "very good", style: .default, handler: { (yourAction) in
             
-            if let tempInput = mjInput {
-                self.itemArray.append(tempInput.text!)
-                self.tableView.reloadData()
-            }
+//            if let tempInput = mjInput {
+//                self.itemArray.append(tempInput.text!)
+//                self.tableView.reloadData()
+//            }
+            self.itemArray.append(mjAlert.textFields![0].text!)
+            self.mjDefaults.set(self.itemArray, forKey: "mjToDoList")
             
+            self.tableView.reloadData()
 
             
         }))
         mjAlert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         mjAlert.addTextField { (yourInput) in
             
-                 mjInput =  yourInput
+     //            mjInput =  yourInput
       
            
+        }
+        mjAlert.addTextField { (secondInput) in
+            //
         }
         
         
