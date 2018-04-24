@@ -10,7 +10,7 @@ import UIKit
 
 class ToDoeyViewController: UITableViewController {
 
-    var itemArray = ["A", "B", "C"]
+    var itemArray = [ToDoListModel]()
     var theChecked : Bool = false
     
     let mjDefaults = UserDefaults.standard
@@ -21,15 +21,20 @@ class ToDoeyViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        if let tempArray =  mjDefaults.array(forKey: "mjToDoList") as? [String] {
-              itemArray = tempArray
+//        if let tempArray =  mjDefaults.array(forKey: "mjToDoList") as? [String] {
+//              itemArray = tempArray
+//        }
+      
+        
+ //      mjDefaults.set("good morning", forKey: "mjToDoList")
+        
+        for _ in 0 ... 36 {
+            itemArray.append(ToDoListModel(title: "a test"))
         }
-      
         
-       mjDefaults.set("good morning", forKey: "mjToDoList")
+    //  mjDefaults.set(itemArray, forKey: "thisistest")    当ItemArray 是class 的array时 default已经不接受了，因为太复杂了
         
         
-      
     }
 
 
@@ -47,7 +52,18 @@ class ToDoeyViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        
+        cell.textLabel?.text = itemArray[indexPath.row].toDoTitle
+        
+        cell.accessoryType = itemArray[indexPath.row].toDoCheck ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+        
+//        if itemArray[indexPath.row].toDoCheck == false {
+//            cell.accessoryType = UITableViewCellAccessoryType.none
+//        }else {
+//            cell.accessoryType = UITableViewCellAccessoryType.checkmark
+//        }
+        
+     //   cell.textLabel?.text = itemArray[indexPath.row]
         cell.backgroundColor = UIColor.blue
      //  tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark  // 很显然这个函数应该是tableview都已经形成后才能使用的。是在delegate使用的函数
         // 在datasource里 是正在建立这个cell 所以肯定要用dequeResuableCell 这个函数先建立cell
@@ -64,22 +80,34 @@ class ToDoeyViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //
         
-      tableView.deselectRow(at: indexPath, animated: true)
+   //   tableView.deselectRow(at: indexPath, animated: true)
+        
+        itemArray[indexPath.row].toDoCheck = !itemArray[indexPath.row].toDoCheck
+        
+//        if  itemArray[indexPath.row].toDoCheck == false {
+//            itemArray[indexPath.row].toDoCheck = true
+//        }else {
+//            itemArray[indexPath.row].toDoCheck = false
+//        }
+
+    tableView.reloadData()
         
      //   tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType(rawValue: 0)!
         
       
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCellAccessoryType.none {
-            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
-        }else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
-        }
+//        if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCellAccessoryType.none {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
+//        }else {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
+//        }
 
       
       
     }
 
+    //MARK:- barButton pressed
+    
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -102,8 +130,13 @@ class ToDoeyViewController: UITableViewController {
 //                self.itemArray.append(tempInput.text!)
 //                self.tableView.reloadData()
 //            }
-            self.itemArray.append(mjAlert.textFields![0].text!)
-            self.mjDefaults.set(self.itemArray, forKey: "mjToDoList")
+            
+            let tempItem = ToDoListModel(title: mjAlert.textFields![0].text!)
+            
+            self.itemArray.append(tempItem)
+            
+       //     self.itemArray.append(mjAlert.textFields![0].text!)
+        //    self.mjDefaults.set(self.itemArray, forKey: "mjToDoList")
             
             self.tableView.reloadData()
 

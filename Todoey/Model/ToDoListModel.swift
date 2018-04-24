@@ -11,9 +11,9 @@ import Foundation
 class ToDoListModel {
     
     let toDoTitle : String
-    let toDoCheck : Bool
+    var toDoCheck : Bool
     
-    init(title: String, check : Bool) {
+    init(title: String, check : Bool = false ) {
         self.toDoTitle = title
         self.toDoCheck = check
         
