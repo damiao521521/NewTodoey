@@ -18,9 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         
-        let tempDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+   //     let tempDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         
-        print(tempDirectory.last! as String)
+  //      print(tempDirectory.last! as String)
         
         return true
     }

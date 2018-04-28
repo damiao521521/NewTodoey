@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ToDoListModel {
+class ToDoListModel  : Encodable,Decodable {
     
     let toDoTitle : String
     var toDoCheck : Bool

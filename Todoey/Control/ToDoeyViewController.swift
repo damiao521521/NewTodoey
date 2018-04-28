@@ -15,10 +15,42 @@ class ToDoeyViewController: UITableViewController {
     
     let mjDefaults = UserDefaults.standard
     
+    let mjFileDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("mjitem.plist")
     
+    let mjDic = ["name" : "miaoJun" , "gender" : "male"]
+    let mjArray = [1,2,3,4,5,6]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        load()
+ 
+//        if let tempfile = mjFileDirectory   {
+//            do {
+//                let mjReadData = try Data(contentsOf: tempfile)
+//                let mjDecoder = PropertyListDecoder()
+//
+//                itemArray = try mjDecoder.decode([ToDoListModel].self, from: mjReadData)
+//            } catch {
+//                print("seems the file not exist")
+//            }
+//        }
+
+       
+        
+   //     mjDecoder.decode(<#T##type: Decodable.Protocol##Decodable.Protocol#>, from: <#T##Data#>)
+        
+        
+        
+// 如下3行是为了测试String是否也是encodable,不是，但改成dictionary后就可以了，那是应为这是PropertyListEncoder所以。。。。
+//        let mjEncoderFirst = PropertyListEncoder()
+//    let mjEncodedDataFirst =  try!  mjEncoderFirst.encode(mjArray)
+//
+//    try!    mjEncodedDataFirst.write(to: mjFileDirectory!)
+
+        
+        
+        
         // Do any additional setup after loading the view, typically from a nib.
         
 //        if let tempArray =  mjDefaults.array(forKey: "mjToDoList") as? [String] {
@@ -28,9 +60,9 @@ class ToDoeyViewController: UITableViewController {
         
  //      mjDefaults.set("good morning", forKey: "mjToDoList")
         
-        for _ in 0 ... 36 {
-            itemArray.append(ToDoListModel(title: "a test"))
-        }
+//        for _ in 0 ... 5 {
+//            itemArray.append(ToDoListModel(title: "a test"))
+//        }
         
     //  mjDefaults.set(itemArray, forKey: "thisistest")    当ItemArray 是class 的array时 default已经不接受了，因为太复杂了
         
@@ -52,6 +84,7 @@ class ToDoeyViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
+        cell.textLabel?.numberOfLines = 0
         
         cell.textLabel?.text = itemArray[indexPath.row].toDoTitle
         
@@ -83,6 +116,8 @@ class ToDoeyViewController: UITableViewController {
    //   tableView.deselectRow(at: indexPath, animated: true)
         
         itemArray[indexPath.row].toDoCheck = !itemArray[indexPath.row].toDoCheck
+        
+        save()
         
 //        if  itemArray[indexPath.row].toDoCheck == false {
 //            itemArray[indexPath.row].toDoCheck = true
@@ -135,6 +170,10 @@ class ToDoeyViewController: UITableViewController {
             
             self.itemArray.append(tempItem)
             
+            
+            self.save()
+           
+            
        //     self.itemArray.append(mjAlert.textFields![0].text!)
         //    self.mjDefaults.set(self.itemArray, forKey: "mjToDoList")
             
@@ -158,7 +197,44 @@ class ToDoeyViewController: UITableViewController {
         
     }
     
+    //MARK: - load and save data
+    
+    func save () {
+        
+        let mjEncoder = PropertyListEncoder()
+        if let tempfileDirectory = mjFileDirectory {
+            do {
+                let mjWriteData = try mjEncoder.encode(itemArray)
+                try mjWriteData.write(to: tempfileDirectory)
+            } catch {
+                print("encoding error sir")
+            }
+        }
 
+        
+    
+    }
+    
+    
+    func load () {
+        
+        if let tempFileDirectory = mjFileDirectory {
+            if let mjReadData = try? Data(contentsOf: tempFileDirectory) {
+                let mjDecoder = PropertyListDecoder()
+                do {
+                   itemArray = try mjDecoder.decode([ToDoListModel].self, from: mjReadData)
+                }
+                catch {
+                    print("read error sir")
+                }
+            }
+        }
+        
+     
+        
+        
+    }
+    
     
 
 }
