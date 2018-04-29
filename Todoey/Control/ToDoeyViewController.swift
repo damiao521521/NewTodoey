@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoeyViewController: UITableViewController {
 
-    var itemArray = [ToDoListModel]()
+ //   var itemArray = [ToDoListModel]()
+    
+   var itemArray = [MJItem]()
     var theChecked : Bool = false
     
     let mjDefaults = UserDefaults.standard
@@ -20,8 +23,18 @@ class ToDoeyViewController: UITableViewController {
     let mjDic = ["name" : "miaoJun" , "gender" : "male"]
     let mjArray = [1,2,3,4,5,6]
     
+    
+    let mjAppdelegate = (UIApplication.shared.delegate as! AppDelegate)
+    let mjContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+    
+        
+        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+        longPressedGesture.minimumPressDuration = 1
+        self.view.addGestureRecognizer(longPressedGesture)
         
         load()
  
@@ -166,7 +179,13 @@ class ToDoeyViewController: UITableViewController {
 //                self.tableView.reloadData()
 //            }
             
-            let tempItem = ToDoListModel(title: mjAlert.textFields![0].text!)
+          //  let tempItem = ToDoListModel(title: mjAlert.textFields![0].text!)
+            
+            let tempItem = MJItem(context: self.mjContext)
+            
+            tempItem.toDoTitle = mjAlert.textFields![0].text!
+            tempItem.toDoCheck = false
+            
             
             self.itemArray.append(tempItem)
             
@@ -201,15 +220,7 @@ class ToDoeyViewController: UITableViewController {
     
     func save () {
         
-        let mjEncoder = PropertyListEncoder()
-        if let tempfileDirectory = mjFileDirectory {
-            do {
-                let mjWriteData = try mjEncoder.encode(itemArray)
-                try mjWriteData.write(to: tempfileDirectory)
-            } catch {
-                print("encoding error sir")
-            }
-        }
+mjAppdelegate.saveContext()
 
         
     
@@ -218,22 +229,20 @@ class ToDoeyViewController: UITableViewController {
     
     func load () {
         
-        if let tempFileDirectory = mjFileDirectory {
-            if let mjReadData = try? Data(contentsOf: tempFileDirectory) {
-                let mjDecoder = PropertyListDecoder()
-                do {
-                   itemArray = try mjDecoder.decode([ToDoListModel].self, from: mjReadData)
-                }
-                catch {
-                    print("read error sir")
-                }
-            }
+        let myRequest : NSFetchRequest<MJItem>  = MJItem.fetchRequest()
+        
+        do {
+               try  itemArray = mjContext.fetch(myRequest)
         }
-        
-     
-        
+        catch {
+            print(error)
+        }
+   
         
     }
+    
+    
+    
     
     
 
