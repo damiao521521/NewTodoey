@@ -32,9 +32,9 @@ class ToDoeyViewController: UITableViewController {
         
     
         
-        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
-        longPressedGesture.minimumPressDuration = 1
-        self.view.addGestureRecognizer(longPressedGesture)
+//        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+//        longPressedGesture.minimumPressDuration = 1
+//        self.view.addGestureRecognizer(longPressedGesture)
         
         load()
  
@@ -115,6 +115,9 @@ class ToDoeyViewController: UITableViewController {
         // 在datasource里 是正在建立这个cell 所以肯定要用dequeResuableCell 这个函数先建立cell
 
         
+        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressed(_:_:)))
+                longPressedGesture.minimumPressDuration = 1
+        cell.addGestureRecognizer(longPressedGesture)
 
         
         return cell

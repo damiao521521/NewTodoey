@@ -14,16 +14,17 @@ import UIKit
 extension ToDoeyViewController {
     
     
-    @objc  func longPressed (sender : UILongPressGestureRecognizer) {
+    @objc  func longPressed (_ sender : UILongPressGestureRecognizer , _ teststring : String) {
 
-            
-  
+     print(sender)
+    print(teststring)
+        
         if sender.state == UIGestureRecognizerState.began {
             
-            let touchPoint = sender.location(in: self.view)
+           let touchPoint = sender.location(in: self.view)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
                 
-                print("Long pressed row: \(indexPath.row)")
+ 
                 
                 let A = UIAlertController(title: "you want to modify", message: "message modify", preferredStyle: .alert)
                 
