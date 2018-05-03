@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+//        let a = Data()
+//        a.name = "Miao Jun"
+//        a.age = 15
+//
+//        let b = Data()
+//        b.name = "ning qing"
+//        b.age = 16
+//
+        do {
+            let mjRealm = try Realm()
+}
+            
+        catch {
+            print (error)
+        }
+        
+        
+        print(Realm.Configuration.defaultConfiguration.fileURL)
         
         
    //     let tempDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)

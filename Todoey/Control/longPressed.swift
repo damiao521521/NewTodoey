@@ -29,8 +29,20 @@ extension ToDoeyViewController {
                 
                 A.addAction(UIAlertAction(title: "OK", style: .default, handler: { (alertAction) in
                     
-                  self.itemArray[indexPath.row].toDoTitle =  A.textFields![0].text!
-                    self.save()
+                    if let tempItem = self.itemArray?[indexPath.row] {
+                        do {
+                            try    self.mjRealm.write {
+                                tempItem.toDoTitle =  A.textFields![0].text!
+                            }
+                        } catch {
+                            print(error)
+                        }
+                    }
+                 
+              
+                    
+                
+           
                     self.tableView.reloadData()
                     
                     
