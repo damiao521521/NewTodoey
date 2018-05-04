@@ -31,7 +31,7 @@ class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
         longPressedGesture.minimumPressDuration = 1
         self.view.addGestureRecognizer(longPressedGesture)
         
-        load()
+     //   load()
  
 
         
@@ -121,6 +121,7 @@ class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
             
             tempItem.toDoTitle = mjAlert.textFields![0].text!
             tempItem.toDoCheck = false
+            tempItem.toDoTime = Date()
             
             if let tempCategory = self.selectedCategory {
                 
@@ -186,7 +187,7 @@ class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
         
    //  itemArray =   mjRealm.objects(MJItem.self)
         
-        itemArray = selectedCategory?.mjItems.sorted(byKeyPath: "toDoTitle", ascending: true)
+        itemArray = selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
 
    
         tableView.reloadData()
@@ -198,31 +199,85 @@ class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
+
+   
+           self.itemArray = self.itemArray?.filter("toDoTitle CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "toDoTitle", ascending: true)
+
+            //    let myQueue = DispatchQueue(label: "myQueue No.1")
+
+//        tableView.reloadData {
+//            self.itemArray = self.selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
+//        }
+
+            self.tableView.reloadData()
+            self.tableView.layoutIfNeeded()
+            self.itemArray = self.selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
+
+    //    DispatchQueue.main.async {}
+  //      self.itemArray = self.selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
         
-        itemArray = itemArray?.filter("toDoTitle CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "toDoTitle", ascending: true)
+  //      load()
+
+
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // change 2 to desired number of seconds
+//            // Your code with delay
+//            self.itemArray = self.selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
+//        }
+  
+//        resetAfterRelaod(searchBar: searchBar) {
+//             self.itemArray = self.selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
+//        }
         
-        tableView.reloadData()
+
         
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+
         if searchText.count == 0 {
             load()
-            
+
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }        }
         else {
             itemArray = itemArray?.filter("toDoTitle CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "toDoTitle", ascending: true)
-            
+
             tableView.reloadData()
+            self.tableView.layoutIfNeeded()
+            self.itemArray = self.selectedCategory?.mjItems.sorted(byKeyPath: "toDoTime", ascending: true)
         }
 
-        
+
     }
     
+    func resetAfterRelaod (searchBar: UISearchBar, completion : @escaping () -> Void) {
+        self.itemArray = self.itemArray?.filter("toDoTitle CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "toDoTitle", ascending: true)
+        self.tableView.reloadData()
+        
+        completion()
+        
+    }
+
+
     
 
 }
 
+extension UITableView {
+    func reloadData(completion:  @escaping () -> Void) {
+        
+        UIView.animate(withDuration: 2, animations:  { self.reloadData() }) { (isDoneDone) in
+         
+            if isDoneDone {
+               //  completion()
+                  print("finish the reload sir")
+            } else {
+              
+            }
+           
+        }
+//        UIView.animate(withDuration: 0, animations: { self.reloadData() })
+//        { _ in completion() }
+    }
+}
