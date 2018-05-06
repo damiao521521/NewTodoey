@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import RealmSwift
 
-class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
+class ToDoeyViewController: SuperClassSwipeTableViewController, UISearchBarDelegate {
 
     
     var selectedCategory : MJCategory?  {
@@ -53,7 +53,8 @@ class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+     //   let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
         cell.textLabel?.numberOfLines = 0
         
@@ -259,7 +260,18 @@ class ToDoeyViewController: UITableViewController, UISearchBarDelegate {
         
     }
 
-
+    override func mjDeleteAction(at: IndexPath) {
+        if let tempCategory = itemArray {
+            do {
+                try  mjRealm.write {
+                    mjRealm.delete(tempCategory[at.row])
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     
 
 }
