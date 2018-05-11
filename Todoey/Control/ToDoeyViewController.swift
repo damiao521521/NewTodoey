@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import RealmSwift
+import ChameleonFramework
 
 class ToDoeyViewController: SuperClassSwipeTableViewController, UISearchBarDelegate {
 
@@ -32,14 +33,18 @@ class ToDoeyViewController: SuperClassSwipeTableViewController, UISearchBarDeleg
         self.view.addGestureRecognizer(longPressedGesture)
         
      //   load()
- 
-
-        
 
         
         
     }
 
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        navigationController?.navigationBar.barTintColor = UIColor.flatMint
+         navigationController?.navigationBar.tintColor = UIColor.flatRed
+    }
+    
 
     //MARK:-  datasource methods
     
@@ -60,12 +65,30 @@ class ToDoeyViewController: SuperClassSwipeTableViewController, UISearchBarDeleg
         
         cell.textLabel?.text = itemArray?[indexPath.row].toDoTitle ?? "no item sir"
         
+
+
+        
+        let myCGFloat = CGFloat( indexPath.row ) / CGFloat(tableView.numberOfRows(inSection: 0) )
+        
+        
+        
+        if let tempColorString = selectedCategory?.cellColor {
+            
+       
+          cell.backgroundColor = UIColor(hexString: tempColorString)?.darken(byPercentage: myCGFloat)
+            cell.textLabel?.textColor = ContrastColorOf((UIColor(hexString: tempColorString)?.darken(byPercentage: myCGFloat))!, returnFlat: true)
+            
+        }
+        
+            
+        
+        
         if let tempArray = itemArray {
              cell.accessoryType = tempArray[indexPath.row].toDoCheck ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
         }
        
 
-        cell.backgroundColor = UIColor.blue
+  
 
 
         return cell
@@ -116,7 +139,11 @@ class ToDoeyViewController: SuperClassSwipeTableViewController, UISearchBarDeleg
         
         let mjAlert = UIAlertController(title: "Title :PLS add new Item Sir", message: "get some new item message ", preferredStyle: .alert)
         
+        
+        
         mjAlert.addAction(UIAlertAction(title: "very good", style: .default, handler: { (yourAction) in
+         
+            
             
                        let tempItem = MJItem()
             
@@ -152,17 +179,36 @@ class ToDoeyViewController: SuperClassSwipeTableViewController, UISearchBarDeleg
         }))
         mjAlert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         mjAlert.addTextField { (yourInput) in
-            
+            yourInput.addTarget(self, action: #selector(self.alertTextFieldChanged), for: .editingChanged)
 
         }
         mjAlert.addTextField { (secondInput) in
             //
         }
-        
-        
+       
+         mjAlert.actions[1].isEnabled = false
         present(mjAlert, animated: true, completion: nil)
         
     }
+    
+    @objc func alertTextFieldChanged(_ sender: Any) {
+        let alertTextField = sender as! UITextField
+        var responder: UIResponder! = alertTextField
+        // Loop through the reponder chain until we find UIAlertController
+        while !(responder is UIAlertController) {
+            responder = responder.next
+        }
+        let alert = responder as! UIAlertController
+        // Perform input validation and enable Add Item button only when textField is not empty
+        alert.actions[1].isEnabled = (alertTextField.text != "")
+    }
+    
+    
+    
+    
+    
+    
+    
     
     //MARK: - load and save data
     

@@ -11,6 +11,7 @@ import RealmSwift
 
 class MJCategory: Object {
     @objc dynamic  var name : String = ""
+    @objc dynamic  var cellColor = UIColor.blue.hexValue()
     
     let mjItems = List<MJItem>()
     
